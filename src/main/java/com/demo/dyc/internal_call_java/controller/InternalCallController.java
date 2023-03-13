@@ -19,7 +19,7 @@ public class InternalCallController {
         String uri = headers.getFirst("X-SERVICE-URI");
         String value1 = headers.getFirst("X-SERVICE-VALUE1");
         String value2 = headers.getFirst("X-SERVICE-VALUE2");
-        if (method == "GET") {
+        if (method.equals("GET")) {
             return internalCallService.InternalCallServiceGet(uri, serviceID, new HashMap<String, String>() {
                 {
                     put("num1", value1);
@@ -30,7 +30,7 @@ public class InternalCallController {
                     put("TEST_HEADER1", "test1");
                 }
             });
-        } else if (method == "POST") {
+        } else if (method.equals("POST")) {
             BaseReq baseReq = new BaseReq();
             if (value1 == null || value2 == null) {
                 return String.format("invalid param, num1: %s, num2: %s", value1, value2);

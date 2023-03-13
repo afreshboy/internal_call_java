@@ -14,12 +14,12 @@ public class BaseController {
     private BaseService baseService;
 
     @RequestMapping(value = "/api/v1/get_count", method = RequestMethod.GET)
-    public int get_count(@RequestParam int num) {
-        return baseService.GetCount(num);
+    public int get_count(@RequestParam int num1, @RequestParam int num2) {
+        return baseService.GetCount(num1, num2);
     }
 
     @RequestMapping(value = "/api/v1/post_count", method = RequestMethod.POST)
     public int post_count(@RequestBody BaseReq baseReq) {
-        return baseService.GetCount(baseReq.getNum());
+        return baseService.GetCount(baseReq.getNum1(),  baseReq.getNum2());
     }
 }

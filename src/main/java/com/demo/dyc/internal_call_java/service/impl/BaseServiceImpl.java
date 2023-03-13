@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BaseServiceImpl implements BaseService {
-    public int GetCount(int num) {
-        System.out.printf("GetCount: %d, return: %d", num, num + 1);
-        return num + 1;
+    public int GetCount(int num1, int num2) {
+        System.out.printf("return: %d", num1 + num2);
+        return num1+num2;
     }
 }

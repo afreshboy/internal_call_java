@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class BaseReq {
-    private int num;
+    private int num1;
+    private int num2;
 }

@@ -13,8 +13,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InternalCallUtil {
-    public static CloseableHttpResponse InternalCallGet(String uri, String toServiceID, HashMap<String, String> paramMap, HashMap<String, String> headers) {
+    public static String InternalCallGet(String uri, String toServiceID, HashMap<String, String> paramMap, HashMap<String, String> headers) {
         String fromServiceID = System.getenv("SERVICE_ID");
         String url = String.format("http://%s-%s.dycloud.service%s", fromServiceID, toServiceID, uri);
 
@@ -55,16 +57,19 @@ public class InternalCallUtil {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
                 System.out.printf("response: %s", response);
-                return response;
+
+                String content = EntityUtils.toString(response.getEntity());
+                System.out.printf("content: %s", content);
+                return content;
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return "";
     }
 
-    public static CloseableHttpResponse InternalCallPost(String uri, String toServiceID, String body, HashMap<String, String> headers) {
+    public static String InternalCallPost(String uri, String toServiceID, String body, HashMap<String, String> headers) {
         String fromServiceID = System.getenv("SERVICE_ID");
         String url = String.format("http://%s-%s.dycloud.service%s", fromServiceID, toServiceID, uri);
 
@@ -80,11 +85,13 @@ public class InternalCallUtil {
 
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
-                return response;
+                String content = EntityUtils.toString(response.getEntity());
+                System.out.printf("content: %s", content);
+                return content;
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 }

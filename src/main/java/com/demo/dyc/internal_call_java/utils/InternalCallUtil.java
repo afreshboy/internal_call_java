@@ -1,7 +1,6 @@
 package com.demo.dyc.internal_call_java.utils;
 
 
-
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,7 +15,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -33,7 +31,7 @@ public class InternalCallUtil {
         // 表单参数
         List<NameValuePair> nvps = new ArrayList<>();
         // GET 请求参数
-        for(Map.Entry<String,String> entry:paramMap.entrySet()){
+        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
             nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
 
@@ -48,7 +46,7 @@ public class InternalCallUtil {
         }
 
         // 添加header
-        for(Map.Entry<String,String> entry:headers.entrySet()){
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
             httpGet.addHeader(entry.getKey(), entry.getValue());
         }
 
@@ -60,6 +58,7 @@ public class InternalCallUtil {
 
                 String content = EntityUtils.toString(response.getEntity());
                 System.out.printf("content: %s", content);
+                response.close();
                 return content;
             }
         } catch (IOException | ParseException e) {
@@ -77,9 +76,10 @@ public class InternalCallUtil {
 
         httpPost.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
 
-        System.out.printf("req: %s", httpPost);
+        System.out.printf("req: %s", body);
+
         // 添加header
-        for(Map.Entry<String,String> entry:headers.entrySet()){
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
             httpPost.addHeader(entry.getKey(), entry.getValue());
         }
 

@@ -1,5 +1,6 @@
 package com.demo.dyc.internal_call_java.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.demo.dyc.internal_call_java.domain.BaseReq;
 import com.demo.dyc.internal_call_java.service.InternalCallService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class InternalCallController {
             }
             baseReq.setNum1(Integer.parseInt(value1));
             baseReq.setNum2(Integer.parseInt(value2));
-            String body = baseReq.toString();
+            String body = JSON.toJSONString(baseReq);
+            System.out.printf("body: %s\n", body);
             return internalCallService.InternalCallServicePost(uri, serviceID, body, new HashMap<String, String>() {
                 {
                     put("TEST_HEADER1", "test1");

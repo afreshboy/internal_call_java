@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InternalCallUtil {
-    public static String InternalCallGet(String uri, String toServiceID, HashMap<String, String> paramMap, HashMap<String, String> headers) {
+    public static String InternalCallGet(String uri, String toServiceID, HashMap<String, String> paramMap, HashMap<String, String> headers) throws Exception {
         String fromServiceID = System.getenv("SERVICE_ID");
         String url = String.format("http://%s-%s.dycloud.service%s", fromServiceID, toServiceID, uri);
 
@@ -63,12 +63,11 @@ public class InternalCallUtil {
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
+            throw e;
         }
-
-        return "";
     }
 
-    public static String InternalCallPost(String uri, String toServiceID, String body, HashMap<String, String> headers) {
+    public static String InternalCallPost(String uri, String toServiceID, String body, HashMap<String, String> headers) throws Exception {
         String fromServiceID = System.getenv("SERVICE_ID");
         String url = String.format("http://%s-%s.dycloud.service%s", fromServiceID, toServiceID, uri);
 
@@ -91,7 +90,7 @@ public class InternalCallUtil {
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
+            throw e;
         }
-        return "";
     }
 }

@@ -50,11 +50,17 @@ public class InternalCallUtil {
             httpGet.addHeader(entry.getKey(), entry.getValue());
         }
 
-        System.out.printf("req: %s", httpGet);
+        System.out.printf("req: %s\n", httpGet);
 
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-                System.out.printf("response: %s", response);
+                System.out.printf("response: %s\n", response);
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (!(statusCode >= 200 && statusCode < 300)) {
+                    System.out.printf("statuscode: %d\n", statusCode);
+                    response.close();
+                    throw new Exception(String.valueOf(statusCode));
+                }
 
                 String content = EntityUtils.toString(response.getEntity());
                 System.out.printf("content: %s", content);
@@ -84,6 +90,12 @@ public class InternalCallUtil {
 
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             try (CloseableHttpResponse response = httpclient.execute(httpPost)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (!(statusCode >= 200 && statusCode < 300)) {
+                    System.out.printf("statuscode: %d\n", statusCode);
+                    response.close();
+                    throw new Exception(String.valueOf(statusCode));
+                }
                 String content = EntityUtils.toString(response.getEntity());
                 System.out.printf("content: %s", content);
                 return content;

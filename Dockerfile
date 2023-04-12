@@ -11,17 +11,16 @@ RUN if [ $(ls /opt/application | grep -w settings.xml | wc -l ) = 1 ]; then mvn 
 
 # 在settings.xml中更换依赖源, 用户未指定的情况
 RUN if [ $(ls /opt/application | grep -w settings.xml | wc -l ) = 0 ]; then mvn -f /opt/application/pom.xml clean package; fi
-ARG WAR_NAME=$(cd /target | ls | grep .war -m 1)
 
 # 采用抖音云基础镜像, 包含https证书, bash, tzdata等常用命令
 FROM public-cn-beijing.cr.volces.com/public/dycloud-openjdk:tomcat-jre8-alpine
 WORKDIR /opt/application
-
+RUN mkdir -p /usr/local/tomcat/myapps
 # 分析打包文件, maven: pom.xml 可得
-COPY --from=builder  /opt/application/target/$WAR_NAME /usr/local/tomcat/webapps/
+COPY --from=builder  /opt/application/target/*.war /usr/local/tomcat/myapps/
 
 # 替换端口号
-RUN sed -i s/8080/8000/g /usr/local/tomcat/conf/server.xml
+RUN war_name=$(ls /usr/local/tomcat/myapps | grep .war -m 1) && sed -i s/8080/8000/g /usr/local/tomcat/conf/server.xml && rm -rf /usr/local/tomcat/webapps/ROOT && content='\ \t<Context path="" docBase="/usr/local/tomcat/myapps/'"${war_name}"'"></Context>' && num=$(grep -n 'autoDeploy' /usr/local/tomcat/conf/server.xml | awk -F ":" '{print $1}') && sed -i ''"${num}"'a '"${content}"'' /usr/local/tomcat/conf/server.xml
 
 # 写入run.sh
 RUN echo -e '#!/usr/bin/env bash\nsh /usr/local/tomcat/bin/catalina.sh run' > /opt/application/run.sh
